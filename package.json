@@ -1,7 +1,27 @@
 {
+  "name": "employee-management-system",
+  "version": "1.0.0",
+  "description": "Employee Management System with MySQL database",
+  "main": "server/server.js",
+  "scripts": {
+    "setup-db": "node setup-database.js",
+    "start": "cd server && npm start",
+    "dev": "cd server && npm run dev",
+    "client": "cd client && npm start",
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install"
+  },
   "dependencies": {
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
     "mysql2": "^3.15.3"
-  }
+  },
+  "keywords": [
+    "employee",
+    "management",
+    "mysql",
+    "nodejs",
+    "react"
+  ],
+  "author": "Cline",
+  "license": "MIT"
 }
