@@ -14,6 +14,20 @@ import './App.css';
 // Set up axios defaults
 axios.defaults.baseURL = 'http://localhost:5000';
 
+// Add axios interceptor to include user role in headers
+axios.interceptors.request.use(
+  (config) => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (user.role_name) {
+      config.headers['user-role'] = user.role_name;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);

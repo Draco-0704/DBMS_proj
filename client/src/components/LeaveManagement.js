@@ -8,7 +8,7 @@ const LeaveManagement = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  
+
   const [formData, setFormData] = useState({
     employee_id: '',
     leave_type_id: '',
@@ -24,21 +24,21 @@ const LeaveManagement = () => {
         // Fetch leave requests
         const leaveResponse = await axios.get('/api/leaves');
         setLeaveRequests(leaveResponse.data);
-        
+
         // Fetch employees for dropdown
         const employeesResponse = await axios.get('/api/employees');
         setEmployees(employeesResponse.data);
-        
+
         // Fetch leave types
         const leaveTypesResponse = await axios.get('/api/leave-types');
         setLeaveTypes(leaveTypesResponse.data);
       } catch (err) {
-        
+
         // Try to fetch leave requests without leave types
         try {
           const leaveResponse = await axios.get('/api/leaves');
           setLeaveRequests(leaveResponse.data);
-          
+
           const employeesResponse = await axios.get('/api/employees');
           setEmployees(employeesResponse.data);
         } catch (err2) {
@@ -65,11 +65,11 @@ const LeaveManagement = () => {
     setLoading(true);
     setError('');
     setSuccess('');
-    
+
     try {
       await axios.post('/api/leaves', formData);
       setSuccess('Leave request created successfully');
-      
+
       // Reset form
       setFormData({
         employee_id: '',
@@ -79,7 +79,7 @@ const LeaveManagement = () => {
         reason: '',
         status: 'Pending'
       });
-      
+
       // Refresh leave requests
       const leaveResponse = await axios.get('/api/leaves');
       setLeaveRequests(leaveResponse.data);
@@ -98,9 +98,9 @@ const LeaveManagement = () => {
         approved_by: 1, // In a real app, this would be the current user's ID
         approved_at: new Date().toISOString().slice(0, 19).replace('T', ' ')
       });
-      
+
       setSuccess('Leave request approved successfully');
-      
+
       // Refresh leave requests
       const leaveResponse = await axios.get('/api/leaves');
       setLeaveRequests(leaveResponse.data);
@@ -117,9 +117,9 @@ const LeaveManagement = () => {
         approved_by: 1, // In a real app, this would be the current user's ID
         approved_at: new Date().toISOString().slice(0, 19).replace('T', ' ')
       });
-      
+
       setSuccess('Leave request rejected successfully');
-      
+
       // Refresh leave requests
       const leaveResponse = await axios.get('/api/leaves');
       setLeaveRequests(leaveResponse.data);
@@ -129,16 +129,15 @@ const LeaveManagement = () => {
     }
   };
 
-  if (loading) return <p>Loading leave requests...</p>;
-  if (error) return <p className="alert alert-error">{error}</p>;
+  if (loading && !leaveRequests.length && !employees.length && !leaveTypes.length) return <p>Loading leave requests...</p>;
 
   return (
     <div>
       <h1>Leave Management</h1>
-      
+
       {error && <div className="alert alert-error">{error}</div>}
       {success && <div className="alert alert-success">{success}</div>}
-      
+
       <div className="card">
         <h2 className="card-header">Apply for Leave</h2>
         <form onSubmit={handleSubmit}>
@@ -159,7 +158,7 @@ const LeaveManagement = () => {
               ))}
             </select>
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="leave_type_id">Leave Type *</label>
             <select
@@ -177,7 +176,7 @@ const LeaveManagement = () => {
               ))}
             </select>
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="start_date">Start Date *</label>
             <input
@@ -189,7 +188,7 @@ const LeaveManagement = () => {
               required
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="end_date">End Date *</label>
             <input
@@ -201,7 +200,7 @@ const LeaveManagement = () => {
               required
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="reason">Reason *</label>
             <textarea
@@ -212,9 +211,9 @@ const LeaveManagement = () => {
               required
             />
           </div>
-          
-          <button 
-            type="submit" 
+
+          <button
+            type="submit"
             className="btn btn-primary"
             disabled={loading}
           >
@@ -222,7 +221,7 @@ const LeaveManagement = () => {
           </button>
         </form>
       </div>
-      
+
       <div className="card">
         <h2 className="card-header">Leave Requests</h2>
         <div className="table-container">
@@ -250,14 +249,14 @@ const LeaveManagement = () => {
                   <td>
                     {request.status === 'Pending' && (
                       <>
-                        <button 
+                        <button
                           className="btn btn-success"
                           onClick={() => handleApprove(request.leave_id)}
                           style={{ marginRight: '5px' }}
                         >
                           Approve
                         </button>
-                        <button 
+                        <button
                           className="btn btn-danger"
                           onClick={() => handleReject(request.leave_id)}
                         >

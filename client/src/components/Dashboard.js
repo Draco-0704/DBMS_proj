@@ -18,19 +18,19 @@ const Dashboard = ({ user }) => {
         // Fetch employees count
         const employeesResponse = await axios.get('/api/employees');
         const totalEmployees = employeesResponse.data.length;
-        
+
         // For present today count, we would need to filter attendance records
         // This is a simplified version
         const presentToday = Math.floor(totalEmployees * 0.8);
-        
+
         // Fetch pending leaves count
         const leavesResponse = await axios.get('/api/leaves');
         const pendingLeaves = leavesResponse.data.filter(leave => leave.status === 'Pending').length;
-        
+
         // Fetch departments count
         const departmentsResponse = await axios.get('/api/departments');
         const totalDepartments = departmentsResponse.data.length;
-        
+
         setStats({
           totalEmployees,
           presentToday,
@@ -63,7 +63,7 @@ const Dashboard = ({ user }) => {
     <div className="dashboard-container">
       <h1 className="dashboard-header">Dashboard</h1>
       <p>Welcome, {user?.username}! You have {stats.pendingLeaves} pending leave requests to review.</p>
-      
+
       {loading ? (
         <p>Loading dashboard stats...</p>
       ) : (
@@ -73,19 +73,19 @@ const Dashboard = ({ user }) => {
             <div className="stat-value">{stats.totalEmployees}</div>
             <p>Active employees in the organization</p>
           </div>
-          
+
           <div className="stat-card">
             <h3>Present Today</h3>
             <div className="stat-value">{stats.presentToday}</div>
             <p>Employees present today</p>
           </div>
-          
+
           <div className="stat-card">
             <h3>Pending Leaves</h3>
             <div className="stat-value">{stats.pendingLeaves}</div>
             <p>Leave requests awaiting approval</p>
           </div>
-          
+
           <div className="stat-card">
             <h3>Departments</h3>
             <div className="stat-value">{stats.totalDepartments}</div>
@@ -93,7 +93,7 @@ const Dashboard = ({ user }) => {
           </div>
         </div>
       )}
-      
+
       <div className="card">
         <h2 className="card-header">Quick Actions</h2>
         <div className="quick-actions" style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
@@ -108,14 +108,22 @@ const Dashboard = ({ user }) => {
           </button>
         </div>
       </div>
-      
+
       <div className="card">
         <h2 className="card-header">Recent Activity</h2>
-        <ul>
-          <li>John Doe's leave request approved</li>
-          <li>New employee Jane Smith added to Engineering department</li>
-          <li>Payroll processed for October 2025</li>
-          <li>Attendance marked for 45 employees</li>
+        <ul style={{ listStyle: 'none', padding: 0 }}>
+          <li style={{ padding: '10px', borderBottom: '1px solid #eee', color: '#666' }}>
+            <span style={{ fontWeight: 'bold', color: '#4caf50' }}>✓</span> John Doe's leave request approved
+          </li>
+          <li style={{ padding: '10px', borderBottom: '1px solid #eee', color: '#666' }}>
+            <span style={{ fontWeight: 'bold', color: '#2196f3' }}>+</span> New employee Jane Smith added to Engineering department
+          </li>
+          <li style={{ padding: '10px', borderBottom: '1px solid #eee', color: '#666' }}>
+            <span style={{ fontWeight: 'bold', color: '#ff9800' }}>$</span> Payroll processed for October 2025
+          </li>
+          <li style={{ padding: '10px', color: '#666' }}>
+            <span style={{ fontWeight: 'bold', color: '#9c27b0' }}>📊</span> Attendance marked for 45 employees
+          </li>
         </ul>
       </div>
     </div>

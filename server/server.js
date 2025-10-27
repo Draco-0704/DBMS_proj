@@ -133,6 +133,14 @@ app.get('/api/employees/:id', (req, res) => {
 
 app.post('/api/employees', (req, res) => {
   const employee = req.body;
+  const userRole = req.headers['user-role'] || req.body.userRole;
+
+  // Role-based access control
+  // Only Admin and Manager can create employee
+  if (userRole !== 'Admin' && userRole !== 'Manager') {
+    return res.status(403).json({ error: 'Access denied. Only Admins and Managers can create employees.' });
+  }
+
   const query = 'INSERT INTO employees (first_name, last_name, email, phone, date_of_birth, gender, marital_status, address, city, state, pincode, aadhaar_number, pan_number, emergency_contact_name, emergency_contact_phone, department_id, role_id, hire_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
   const values = [
     employee.first_name,
@@ -171,6 +179,13 @@ app.post('/api/employees', (req, res) => {
 app.put('/api/employees/:id', (req, res) => {
   const employeeId = req.params.id;
   const employee = req.body;
+  const userRole = req.headers['user-role'] || req.body.userRole;
+
+  // Role-based access control
+  // Only Admin can edit employee information
+  if (userRole !== 'Admin') {
+    return res.status(403).json({ error: 'Access denied. Only Admins can edit employee information.' });
+  }
 
   const query = 'UPDATE employees SET first_name = ?, last_name = ?, email = ?, phone = ?, date_of_birth = ?, gender = ?, marital_status = ?, address = ?, city = ?, state = ?, pincode = ?, aadhaar_number = ?, pan_number = ?, emergency_contact_name = ?, emergency_contact_phone = ?, department_id = ?, role_id = ?, hire_date = ?, termination_date = ?, is_active = ? WHERE employee_id = ?';
   const values = [
@@ -213,6 +228,13 @@ app.put('/api/employees/:id', (req, res) => {
 
 app.delete('/api/employees/:id', (req, res) => {
   const employeeId = req.params.id;
+  const userRole = req.headers['user-role'] || req.body.userRole;
+
+  // Role-based access control
+  // Only Admin can delete employees
+  if (userRole !== 'Admin') {
+    return res.status(403).json({ error: 'Access denied. Only Admins can delete employees.' });
+  }
 
   // Instead of deleting, we mark as inactive
   const query = 'UPDATE employees SET is_active = 0 WHERE employee_id = ?';
@@ -417,6 +439,16 @@ app.get('/api/leave-types', (req, res) => {
   });
 });
 
+// Store for registered users (in production, this would be in a database)
+let registeredUsers = {
+  'Srikant': { username: 'Srikant', password: 'test1234', role_name: 'Admin', employee_id: 1, first_name: 'Srikant', last_name: 'Admin' },
+  'rajesh.kumar': { username: 'rajesh.kumar', password: 'password123', role_name: 'Manager', employee_id: 1, first_name: 'Rajesh', last_name: 'Kumar' },
+  'priya.sharma': { username: 'priya.sharma', password: 'password123', role_name: 'Employee', employee_id: 2, first_name: 'Priya', last_name: 'Sharma' },
+  'amit.patel': { username: 'amit.patel', password: 'password123', role_name: 'Manager', employee_id: 3, first_name: 'Amit', last_name: 'Patel' },
+  'sneha.reddy': { username: 'sneha.reddy', password: 'password123', role_name: 'Employee', employee_id: 4, first_name: 'Sneha', last_name: 'Reddy' },
+  'vikas.singh': { username: 'vikas.singh', password: 'password123', role_name: 'Employee', employee_id: 5, first_name: 'Vikas', last_name: 'Singh' }
+};
+
 // Login route for authentication
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
@@ -425,34 +457,61 @@ app.post('/api/login', async (req, res) => {
     return res.status(400).json({ error: 'Username and password are required' });
   }
 
-  // Mock authentication for testing (works without MySQL)
-  const mockUsers = {
-    'Srikant': { username: 'Srikant', role_name: 'Admin', employee_id: 1, first_name: 'Srikant', last_name: 'Admin' },
-    'rajesh.kumar': { username: 'rajesh.kumar', role_name: 'Manager', employee_id: 1, first_name: 'Rajesh', last_name: 'Kumar' },
-    'priya.sharma': { username: 'priya.sharma', role_name: 'Employee', employee_id: 2, first_name: 'Priya', last_name: 'Sharma' },
-    'amit.patel': { username: 'amit.patel', role_name: 'Manager', employee_id: 3, first_name: 'Amit', last_name: 'Patel' },
-    'sneha.reddy': { username: 'sneha.reddy', role_name: 'Employee', employee_id: 4, first_name: 'Sneha', last_name: 'Reddy' },
-    'vikas.singh': { username: 'vikas.singh', role_name: 'Employee', employee_id: 5, first_name: 'Vikas', last_name: 'Singh' }
-  };
+  const user = registeredUsers[username];
 
-  const validPasswords = {
-    'Srikant': 'test1234',
-    'rajesh.kumar': 'password123',
-    'priya.sharma': 'password123',
-    'amit.patel': 'password123',
-    'sneha.reddy': 'password123',
-    'vikas.singh': 'password123'
-  };
-
-  if (validPasswords[username] && validPasswords[username] === password) {
-    const user = mockUsers[username];
+  if (user && user.password === password) {
     return res.json({
       message: 'Login successful',
-      user: user
+      user: {
+        username: user.username,
+        role_name: user.role_name,
+        employee_id: user.employee_id,
+        first_name: user.first_name,
+        last_name: user.last_name
+      }
     });
   }
 
   return res.status(401).json({ error: 'Invalid username or password' });
+});
+
+// Signup route for user registration
+app.post('/api/signup', async (req, res) => {
+  const { username, password, first_name, last_name, email, role_name } = req.body;
+
+  if (!username || !password || !first_name || !last_name || !email) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  // Check if username already exists
+  if (registeredUsers[username]) {
+    return res.status(409).json({ error: 'Username already exists' });
+  }
+
+  // Create new user
+  const newUser = {
+    username,
+    password,
+    role_name: role_name || 'Employee',
+    employee_id: Object.keys(registeredUsers).length + 1,
+    first_name,
+    last_name,
+    email
+  };
+
+  registeredUsers[username] = newUser;
+
+  return res.status(201).json({
+    message: 'User registered successfully',
+    user: {
+      username: newUser.username,
+      role_name: newUser.role_name,
+      employee_id: newUser.employee_id,
+      first_name: newUser.first_name,
+      last_name: newUser.last_name,
+      email: newUser.email
+    }
+  });
 });
 
 

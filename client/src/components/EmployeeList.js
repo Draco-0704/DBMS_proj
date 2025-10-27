@@ -6,10 +6,15 @@ const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [userRole, setUserRole] = useState('Employee');
 
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
+        // Get user info from localStorage
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        setUserRole(user.role_name || 'Employee');
+
         const response = await axios.get('/api/employees');
         setEmployees(response.data);
       } catch (err) {
@@ -30,11 +35,13 @@ const EmployeeList = () => {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <h1>Employee List</h1>
-        <Link to="/employees/new" className="btn btn-primary">
-          Add New Employee
-        </Link>
+        {(userRole === 'Admin' || userRole === 'Manager') && (
+          <Link to="/employees/new" className="btn btn-primary">
+            Add New Employee
+          </Link>
+        )}
       </div>
-      
+
       <div className="table-container">
         <table className="table">
           <thead>
@@ -60,9 +67,13 @@ const EmployeeList = () => {
                 <td>{employee.role_name || 'Not assigned'}</td>
                 <td>{new Date(employee.hire_date).toLocaleDateString('en-IN')}</td>
                 <td>
-                  <Link to={`/employees/edit/${employee.employee_id}`} className="btn btn-secondary">
-                    Edit
-                  </Link>
+                  {userRole === 'Admin' ? (
+                    <Link to={`/employees/edit/${employee.employee_id}`} className="btn btn-secondary">
+                      Edit
+                    </Link>
+                  ) : (
+                    <span style={{ color: '#999', fontStyle: 'italic' }}>View Only</span>
+                  )}
                 </td>
               </tr>
             ))}
