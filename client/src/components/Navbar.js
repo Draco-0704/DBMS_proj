@@ -1,21 +1,24 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 
 const Navbar = ({ onLogout, user }) => {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <Link to="/">Employee Management System</Link>
+        <Link to="/">EMS</Link>
       </div>
       <ul className="navbar-menu">
-        <li><Link to="/">Dashboard</Link></li>
-        <li><Link to="/employees">Employees</Link></li>
-        <li><Link to="/attendance">Attendance</Link></li>
-        <li><Link to="/leave">Leave</Link></li>
-        <li><Link to="/payroll">Payroll</Link></li>
+        <li><NavLink to="/" end className={({ isActive }) => isActive ? 'active' : ''}>Dashboard</NavLink></li>
+        <li><NavLink to="/employees" className={({ isActive }) => isActive ? 'active' : ''}>Employees</NavLink></li>
+        <li><NavLink to="/attendance" className={({ isActive }) => isActive ? 'active' : ''}>Attendance</NavLink></li>
+        <li><NavLink to="/leave" className={({ isActive }) => isActive ? 'active' : ''}>Leave</NavLink></li>
+        <li><NavLink to="/payroll" className={({ isActive }) => isActive ? 'active' : ''}>Payroll</NavLink></li>
       </ul>
       <div className="navbar-user">
-        <span style={{ marginRight: '15px' }}>Welcome, {user?.username || 'User'}</span>
+        <div style={{ textAlign: 'right', marginRight: '1rem' }}>
+          <div style={{ fontSize: '0.875rem', fontWeight: '600' }}>{user?.username}</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-light)' }}>{user?.role_name}</div>
+        </div>
         <button className="btn btn-secondary" onClick={onLogout}>
           Logout
         </button>

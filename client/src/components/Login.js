@@ -60,6 +60,7 @@ const Login = ({ onLogin }) => {
   return (
     <div className="login-container">
       <h2 className="login-header">Employee Management System</h2>
+
       <div className="auth-toggle">
         <button
           type="button"
@@ -82,7 +83,7 @@ const Login = ({ onLogin }) => {
 
         {isSignup && (
           <>
-            <div className="form-row">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               <div className="form-group">
                 <label htmlFor="first_name">First Name</label>
                 <input
@@ -162,7 +163,7 @@ const Login = ({ onLogin }) => {
             minLength={6}
           />
           {isSignup && (
-            <small style={{ color: '#666', marginTop: '5px', display: 'block' }}>
+            <small style={{ color: 'var(--text-light)', marginTop: '5px', display: 'block', fontSize: '0.75rem' }}>
               Password must be at least 6 characters
             </small>
           )}
@@ -172,7 +173,7 @@ const Login = ({ onLogin }) => {
           type="submit"
           className="btn btn-primary"
           disabled={loading}
-          style={{ width: '100%', marginTop: '10px' }}
+          style={{ width: '100%', marginTop: '1rem', padding: '0.75rem' }}
         >
           {loading ? (isSignup ? 'Signing up...' : 'Logging in...') : (isSignup ? 'Sign Up' : 'Login')}
         </button>

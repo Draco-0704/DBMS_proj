@@ -3,12 +3,13 @@
 const mysql = require('mysql2');
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, 'server', '.env') });
 
 // Database configuration
 const dbConfig = {
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
+  password: process.env.DB_PASSWORD || 'srikant123',
   multipleStatements: true
 };
 
@@ -29,23 +30,23 @@ connection.connect((err) => {
     console.log('3. The database credentials are correct');
     process.exit(1);
   }
-  
+
   console.log('Connected to MySQL successfully');
-  
+
   // Read schema file
   const schemaPath = path.join(__dirname, 'database', 'schema.sql');
   const seedPath = path.join(__dirname, 'database', 'seed.sql');
-  
+
   if (!fs.existsSync(schemaPath)) {
     console.error('Schema file not found at:', schemaPath);
     process.exit(1);
   }
-  
+
   const schema = fs.readFileSync(schemaPath, 'utf8');
   const seed = fs.existsSync(seedPath) ? fs.readFileSync(seedPath, 'utf8') : '';
-  
+
   console.log('Executing database schema...');
-  
+
   // Execute schema
   connection.query(schema, (err) => {
     if (err) {
@@ -53,12 +54,12 @@ connection.connect((err) => {
       connection.end();
       process.exit(1);
     }
-    
+
     console.log('Database schema created successfully');
-    
+
     if (seed) {
       console.log('Inserting sample data...');
-      
+
       // Execute seed data
       connection.query(seed, (err) => {
         if (err) {
@@ -66,7 +67,7 @@ connection.connect((err) => {
           connection.end();
           process.exit(1);
         }
-        
+
         console.log('Sample data inserted successfully');
         console.log('\nDatabase setup completed!');
         console.log('You can now start the server with: npm start');
@@ -74,7 +75,7 @@ connection.connect((err) => {
         console.log('Username: Srikant, Password: test1234');
         console.log('Username: rajesh.kumar, Password: password123');
         console.log('Username: priya.sharma, Password: password123');
-        
+
         connection.end();
       });
     } else {

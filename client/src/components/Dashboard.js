@@ -61,70 +61,108 @@ const Dashboard = ({ user }) => {
 
   return (
     <div className="dashboard-container">
-      <h1 className="dashboard-header">Dashboard</h1>
-      <p>Welcome, {user?.username}! You have {stats.pendingLeaves} pending leave requests to review.</p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <div>
+          <h1 className="dashboard-header" style={{ marginBottom: '0.5rem' }}>Dashboard</h1>
+          <p style={{ color: 'var(--text-secondary)' }}>Welcome back, {user?.username}!</p>
+        </div>
+        <div className="date-display" style={{ color: 'var(--text-light)', fontWeight: 500 }}>
+          {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+        </div>
+      </div>
 
       {loading ? (
-        <p>Loading dashboard stats...</p>
+        <div className="app-loading">Loading dashboard stats...</div>
       ) : (
         <div className="dashboard-stats">
           <div className="stat-card">
-            <h3>Total Employees</h3>
-            <div className="stat-value">{stats.totalEmployees}</div>
-            <p>Active employees in the organization</p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+              <div>
+                <h3>Total Employees</h3>
+                <div className="stat-value">{stats.totalEmployees}</div>
+                <p>Active employees</p>
+              </div>
+              <div style={{ fontSize: '2rem', opacity: 0.2 }}>👥</div>
+            </div>
           </div>
 
-          <div className="stat-card">
-            <h3>Present Today</h3>
-            <div className="stat-value">{stats.presentToday}</div>
-            <p>Employees present today</p>
+          <div className="stat-card" style={{ borderLeftColor: 'var(--secondary-color)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+              <div>
+                <h3>Present Today</h3>
+                <div className="stat-value">{stats.presentToday}</div>
+                <p>~80% attendance</p>
+              </div>
+              <div style={{ fontSize: '2rem', opacity: 0.2 }}>✅</div>
+            </div>
           </div>
 
-          <div className="stat-card">
-            <h3>Pending Leaves</h3>
-            <div className="stat-value">{stats.pendingLeaves}</div>
-            <p>Leave requests awaiting approval</p>
+          <div className="stat-card" style={{ borderLeftColor: 'var(--accent-color)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+              <div>
+                <h3>Pending Leaves</h3>
+                <div className="stat-value">{stats.pendingLeaves}</div>
+                <p>Requires attention</p>
+              </div>
+              <div style={{ fontSize: '2rem', opacity: 0.2 }}>📅</div>
+            </div>
           </div>
 
-          <div className="stat-card">
-            <h3>Departments</h3>
-            <div className="stat-value">{stats.totalDepartments}</div>
-            <p>Total departments in the organization</p>
+          <div className="stat-card" style={{ borderLeftColor: '#8B5CF6' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+              <div>
+                <h3>Departments</h3>
+                <div className="stat-value">{stats.totalDepartments}</div>
+                <p>Across organization</p>
+              </div>
+              <div style={{ fontSize: '2rem', opacity: 0.2 }}>🏢</div>
+            </div>
           </div>
         </div>
       )}
 
-      <div className="card">
-        <h2 className="card-header">Quick Actions</h2>
-        <div className="quick-actions" style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
-          <button className="btn btn-primary" onClick={handleAddEmployee}>
-            Add New Employee
-          </button>
-          <button className="btn btn-primary" onClick={handleMarkAttendance}>
-            Mark Attendance
-          </button>
-          <button className="btn btn-primary" onClick={handleProcessPayroll}>
-            Process Payroll
-          </button>
+      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
+        <div className="card">
+          <h2 className="card-header" style={{ fontSize: '1.25rem', marginBottom: '1.5rem' }}>Recent Activity</h2>
+          <ul style={{ listStyle: 'none', padding: 0 }}>
+            <li style={{ padding: '1rem 0', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '50%', background: '#DCFCE7', color: '#166534' }}>✓</span>
+              <div>
+                <div style={{ fontWeight: 500 }}>Leave request approved</div>
+                <div style={{ fontSize: '0.875rem', color: 'var(--text-light)' }}>John Doe • 2 hours ago</div>
+              </div>
+            </li>
+            <li style={{ padding: '1rem 0', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '50%', background: '#DBEAFE', color: '#1E40AF' }}>+</span>
+              <div>
+                <div style={{ fontWeight: 500 }}>New employee added</div>
+                <div style={{ fontSize: '0.875rem', color: 'var(--text-light)' }}>Jane Smith • 5 hours ago</div>
+              </div>
+            </li>
+            <li style={{ padding: '1rem 0', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '50%', background: '#FEF3C7', color: '#92400E' }}>$</span>
+              <div>
+                <div style={{ fontWeight: 500 }}>Payroll processed</div>
+                <div style={{ fontSize: '0.875rem', color: 'var(--text-light)' }}>October 2025 • Yesterday</div>
+              </div>
+            </li>
+          </ul>
         </div>
-      </div>
 
-      <div className="card">
-        <h2 className="card-header">Recent Activity</h2>
-        <ul style={{ listStyle: 'none', padding: 0 }}>
-          <li style={{ padding: '10px', borderBottom: '1px solid #eee', color: '#666' }}>
-            <span style={{ fontWeight: 'bold', color: '#4caf50' }}>✓</span> John Doe's leave request approved
-          </li>
-          <li style={{ padding: '10px', borderBottom: '1px solid #eee', color: '#666' }}>
-            <span style={{ fontWeight: 'bold', color: '#2196f3' }}>+</span> New employee Jane Smith added to Engineering department
-          </li>
-          <li style={{ padding: '10px', borderBottom: '1px solid #eee', color: '#666' }}>
-            <span style={{ fontWeight: 'bold', color: '#ff9800' }}>$</span> Payroll processed for October 2025
-          </li>
-          <li style={{ padding: '10px', color: '#666' }}>
-            <span style={{ fontWeight: 'bold', color: '#9c27b0' }}>📊</span> Attendance marked for 45 employees
-          </li>
-        </ul>
+        <div className="card">
+          <h2 className="card-header" style={{ fontSize: '1.25rem', marginBottom: '1.5rem' }}>Quick Actions</h2>
+          <div className="quick-actions" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <button className="btn btn-primary" onClick={handleAddEmployee} style={{ justifyContent: 'flex-start' }}>
+              <span style={{ marginRight: '0.5rem' }}>+</span> Add New Employee
+            </button>
+            <button className="btn btn-secondary" onClick={handleMarkAttendance} style={{ justifyContent: 'flex-start' }}>
+              <span style={{ marginRight: '0.5rem' }}>📝</span> Mark Attendance
+            </button>
+            <button className="btn btn-secondary" onClick={handleProcessPayroll} style={{ justifyContent: 'flex-start' }}>
+              <span style={{ marginRight: '0.5rem' }}>💰</span> Process Payroll
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -9,16 +9,21 @@ INSERT INTO employees (first_name, last_name, email, phone, date_of_birth, gende
 ('Priya', 'Sharma', 'priya.sharma@company.com', '9876543212', '1990-08-22', 'Female', 'Single', '456, Connaught Place', 'New Delhi', 'Delhi', '110001', '234567890123', 'FGHIJ5678K', 'Vikram Sharma', '9876543213', 1, 2, '2021-03-10'),
 ('Amit', 'Patel', 'amit.patel@company.com', '9876543214', '1988-12-03', 'Male', 'Married', '789, Ellis Bridge', 'Ahmedabad', 'Gujarat', '380006', '345678901234', 'LMNOP9012Q', 'Neha Patel', '9876543215', 3, 2, '2019-07-20'),
 ('Sneha', 'Reddy', 'sneha.reddy@company.com', '9876543216', '1992-04-18', 'Female', 'Single', '101, Hitech City', 'Hyderabad', 'Telangana', '500081', '456789012345', 'QRSTU3456V', 'Arjun Reddy', '9876543217', 4, 3, '2022-01-05'),
-('Vikas', 'Singh', 'vikas.singh@company.com', '9876543218', '1987-09-30', 'Male', 'Married', '202, Salt Lake', 'Kolkata', 'West Bengal', '700091', '567890123456', 'WXYZA7890B', 'Pooja Singh', '9876543219', 2, 3, '2020-11-12');
+('Vikas', 'Singh', 'vikas.singh@company.com', '9876543218', '1987-09-30', 'Male', 'Married', '202, Salt Lake', 'Kolkata', 'West Bengal', '700091', '567890123456', 'WXYZA7890B', 'Pooja Singh', '9876543219', 2, 3, '2020-11-12'),
+('Srikant', 'Admin', 'admin@company.com', '9999999999', '1980-01-01', 'Male', 'Married', 'Admin House', 'Mumbai', 'Maharashtra', '400001', '999999999999', 'ZZZZZ9999Z', 'Admin Contact', '9999999998', 1, 1, '2019-01-01');
 
--- Insert sample users (passwords are hashed values of 'password123')
+-- Insert sample users
+-- Passwords:
+-- Srikant: test1234 -> $2b$10$P25bdXQQuiEiKgimRx54E.JZG2w2AQo9utST1q1K3fZQ.c855bM3q
+-- Others: password123 -> $2b$10$wyzLHBYCzCYpMvNA58v1zedA2O/rY.aS2axnSFIUrYBrrMq2Q4Zo6
+
 INSERT INTO users (employee_id, username, password_hash, role_id) VALUES
-(1, 'rajesh.kumar', '$2b$10$abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890', 1),
-(2, 'priya.sharma', '$2b$10$abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890', 2),
-(3, 'amit.patel', '$2b$10$abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890', 2),
-(4, 'sneha.reddy', '$2b$10$abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890', 3),
-(5, 'vikas.singh', '$2b$10$abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890', 3),
-(1, 'Srikant', '$2b$10$abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890', 1); -- Using the same hash for simplicity
+(1, 'rajesh.kumar', '$2b$10$wyzLHBYCzCYpMvNA58v1zedA2O/rY.aS2axnSFIUrYBrrMq2Q4Zo6', 1),
+(2, 'priya.sharma', '$2b$10$wyzLHBYCzCYpMvNA58v1zedA2O/rY.aS2axnSFIUrYBrrMq2Q4Zo6', 2),
+(3, 'amit.patel', '$2b$10$wyzLHBYCzCYpMvNA58v1zedA2O/rY.aS2axnSFIUrYBrrMq2Q4Zo6', 2),
+(4, 'sneha.reddy', '$2b$10$wyzLHBYCzCYpMvNA58v1zedA2O/rY.aS2axnSFIUrYBrrMq2Q4Zo6', 3),
+(5, 'vikas.singh', '$2b$10$wyzLHBYCzCYpMvNA58v1zedA2O/rY.aS2axnSFIUrYBrrMq2Q4Zo6', 3),
+(6, 'Srikant', '$2b$10$P25bdXQQuiEiKgimRx54E.JZG2w2AQo9utST1q1K3fZQ.c855bM3q', 1);
 
 -- Insert sample attendance records for the current month
 INSERT INTO attendance (employee_id, date, check_in_time, check_out_time, status) VALUES
@@ -62,3 +67,4 @@ INSERT INTO payroll (employee_id, basic_salary, hra, da, medical_allowance, conv
 (3, 55000.00, 11000.00, 5500.00, 1500.00, 1600.00, 2500.00, 4500.00, 200.00, 6600.00, 0.00, 60700.00, '2025-10-05'),
 (4, 40000.00, 8000.00, 4000.00, 1500.00, 1600.00, 1000.00, 2000.00, 200.00, 4800.00, 0.00, 45500.00, '2025-10-05'),
 (5, 45000.00, 9000.00, 4500.00, 1500.00, 1600.00, 1500.00, 2500.00, 200.00, 5400.00, 0.00, 51500.00, '2025-10-05');
+
